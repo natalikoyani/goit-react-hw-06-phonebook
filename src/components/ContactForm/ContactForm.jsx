@@ -1,8 +1,9 @@
 import { Formik } from "formik";
 import * as Yup from 'yup';
 import { StyledForm, StyledLabel, StyledButton, StyledField, StyledErrorMessage } from "./ContactForm.styled";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from '../../redux/contactsSlice'
+import { selectContacts } from "redux/selectors";
 
 const phonebookSchema = Yup.object().shape({
   name: Yup.string().required('This field is required!'),
@@ -11,12 +12,21 @@ const phonebookSchema = Yup.object().shape({
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
 
   return (
     <Formik
       initialValues={{ name: '', number: '' }}
       validationSchema={phonebookSchema}
       onSubmit={(values, actions) => {
+        if (
+          contacts.some(
+            contact =>
+              contact.name.toLowerCase() === values.name.toLowerCase()
+          )
+        ) {
+          return alert(`${values.name} is already in contacts!`);
+        }
         dispatch(addContact(values));
         actions.resetForm();
       }}

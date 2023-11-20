@@ -1,10 +1,11 @@
 import { StyledTitle, StyledFilter } from './Filter.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { onFilterChange } from '../../redux/filterSlice';
+import { selectContacts } from 'redux/selectors';
 
 export const Filter = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(selectContacts);
 
   if (contacts.length === 0 ?? !contacts) {
     return (
